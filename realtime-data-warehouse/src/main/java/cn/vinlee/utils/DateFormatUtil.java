@@ -19,6 +19,9 @@ public class DateFormatUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATE_TIME_FORMATTER_FULL = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private DateFormatUtil() {
+    }
+
     public static Long toTimestamp(String dateStr, boolean isFull) {
 
         LocalDateTime localDateTime = null;
@@ -45,6 +48,6 @@ public class DateFormatUtil {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(dt.toInstant(), ZoneId.systemDefault());
         return DATE_TIME_FORMATTER_FULL.format(localDateTime);
     }
-    
+
 }
 

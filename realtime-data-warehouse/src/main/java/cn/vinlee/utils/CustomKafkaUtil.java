@@ -1,4 +1,4 @@
-package cn.vinlee.common;
+package cn.vinlee.utils;
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
@@ -11,6 +11,8 @@ import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 import java.util.Properties;
@@ -26,12 +28,15 @@ import static org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer.DEF
  **/
 public class CustomKafkaUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomKafkaUtil.class);
+
     private CustomKafkaUtil() {
 
     }
 
     private static final Properties PROPERTIES = new Properties();
     private static final String BOOTSTRAP_SERVERS = "hadoop1:9092";
+    private static final String ODS_BASE_DB = "ods_base_db";
 
     //静态代码块
     static {
@@ -106,6 +111,63 @@ public class CustomKafkaUtil {
                 DEFAULT_KAFKA_PRODUCERS_POOL_SIZE);
 
 
+    }
+
+    /**
+     * 以Flink SQL形式获取kafka源表配置.
+     *
+     * @param topic   主题
+     * @param groupId 消费组
+     * @return 拼接好的Kafka数据源DDL语句
+     */
+    public static String getKafkaDdl(String topic, String groupId) {
+        String result = "WITH (\n" +
+                "  'connector' = 'kafka',\n" +
+                "  'topic' = '" + topic + "',\n" +
+                "  'properties.bootstrap.servers' = '" + BOOTSTRAP_SERVERS + "',\n" +
+                "  'properties.group.id' = '" + groupId + "',\n" +
+                "  'scan.startup.mode' = 'earliest-offset',\n" +
+                "  'format' = 'json'\n" +
+                ")";
+        LOGGER.info("获得 Kafka DDL: [{}]", result);
+        return result;
+    }
+
+    /**
+     * Kafka-sink DDL语句.
+     *
+     * @param topic 主题
+     * @return 拼接好的Kafka-sink DDL语句。
+     */
+    public static String getUpsertDdl(String topic) {
+        String result = "WITH (\n" +
+                "  'connector' = 'upsert-kafka',\n" +
+                "  'topic' = '" + topic + "',\n" +
+                "  'properties.bootstrap.servers' = '" + BOOTSTRAP_SERVERS + "',\n" +
+                "  'key.format' = 'json',\n" +
+                "  'value.format' = 'json'\n" +
+                ")";
+        LOGGER.info("getUpsertDDL [ {} ]", result);
+        return result;
+    }
+
+    /**
+     * 获得数据库事务DDL定义语句.
+     *
+     * @param groupId 消费组名称.
+     * @return 返回表的ddl语句.
+     */
+    public static String getTopicDatabaseDdl(String groupId) {
+        String result = "CREATE TABLE ods_base_db (\n" +
+                "  `database` String,\n" +
+                "  `table` String,\n" +
+                "  `type` STRING,\n" +
+                "  `data` Map<STRING,STRING>,\n" +
+                "  `old` Map<STRING,STRING>,\n" +
+                "   `pt` as PROCTIME() \n" +
+                ")" + CustomKafkaUtil.getKafkaDdl(ODS_BASE_DB, groupId);
+        LOGGER.info("getTopicDatabaseDDL : [ {} ]", result);
+        return result;
     }
 
 }
