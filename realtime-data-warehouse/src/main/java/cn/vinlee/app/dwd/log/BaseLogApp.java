@@ -2,7 +2,7 @@ package cn.vinlee.app.dwd.log;
 
 import cn.vinlee.app.func.dwd.DwdTopicEnum;
 import cn.vinlee.app.func.dwd.ValidateOldNewCustomersFunc;
-import cn.vinlee.common.CustomKafkaUtil;
+import cn.vinlee.utils.CustomKafkaUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;

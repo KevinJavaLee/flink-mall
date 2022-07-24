@@ -1,6 +1,6 @@
 package cn.vinlee.app.dwd.log;
 
-import cn.vinlee.common.CustomKafkaUtil;
+import cn.vinlee.utils.CustomKafkaUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
@@ -125,7 +125,7 @@ public class DwdTrafficUserJumpDetail {
 
         //9.合并两个流事件
         DataStream<JSONObject> unionStream = selectDataStream.union(timeOutStream);
-        
+
         //10.输出到kafak中
         String sinkTopic = "dwd_traffic_user_jump_detail";
         unionStream.map(d -> d.toJSONString()).addSink(CustomKafkaUtil.getKafkaProducer(sinkTopic));

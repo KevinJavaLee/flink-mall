@@ -1,7 +1,7 @@
 package cn.vinlee.app.dwd.log;
 
 import cn.vinlee.app.func.dwd.UniqueVisitorFilterFunc;
-import cn.vinlee.common.CustomKafkaUtil;
+import cn.vinlee.utils.CustomKafkaUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.flink.api.common.functions.FilterFunction;

@@ -3,7 +3,7 @@ package cn.vinlee.app.dim;
 import cn.vinlee.app.func.DimPhoenixSinkFun;
 import cn.vinlee.app.func.TableProcessConfigBroadcastFunction;
 import cn.vinlee.bean.TableProcessConfig;
-import cn.vinlee.common.CustomKafkaUtil;
+import cn.vinlee.utils.CustomKafkaUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.ververica.cdc.connectors.mysql.source.MySqlSource;
 import com.ververica.cdc.connectors.mysql.table.StartupOptions;
