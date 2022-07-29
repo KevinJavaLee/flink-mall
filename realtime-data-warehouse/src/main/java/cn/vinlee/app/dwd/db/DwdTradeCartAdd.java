@@ -23,7 +23,7 @@ import java.time.ZoneId;
  * @date 2022/7/23 14:18:32
  **/
 public class DwdTradeCartAdd {
-    static final String TRADE_CRAT_ADD_SINK_TOPIC = "dwd_trade_cart_add";
+    static final String TRADE_CRAT_ADD_SINK_TOPIC = "dwd_trade_cart_add_detail";
     static final Logger LOGGER = LoggerFactory.getLogger(DwdTradeCartAdd.class);
 
     public static void main(String[] args) throws Exception {
